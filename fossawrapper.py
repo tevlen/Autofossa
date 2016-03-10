@@ -348,6 +348,39 @@ def Model_mod():
     
 def Model_copy():
     print("Entering Model Copier")
+    #PLEASE MAKE A WAY TO SHOW ALL OF THE MODELS IN THE WORKING FOLDER!!!
+    print("Pleae enter the name of the model you wish to open\r")
+    var = input("Please Enter a string\r")
+    varnotset = 1
+    while varnotset == 1:
+        if input =='':
+            print("You must enter a name")
+            var = input("Please Enter a string\r")
+        else:
+            varnotset = 0
+    fileString = var + "_model.p"
+    with open(fileString, 'rb') as f:
+        name = pickle.load(f)
+        states = pickle.load(f)
+        conductances = pickle.load(f)
+        rates = pickle.load(f)
+        
+    print("Pleae enter the name you would like to save the new model as\r")
+    var = input("Please Enter a string\r")
+    varnotset = 1
+    while varnotset == 1:
+        if input =='':
+            print("You must enter a name")
+            var = input("Please Enter a string\r")
+        else:
+            varnotset = 0
+    fileString = var + "_model.p"    
+    with open(fileString, 'wb') as f:
+        pickle.dump(name, f, pickle.HIGHEST_PROTOCOL)
+        pickle.dump(states, f, pickle.HIGHEST_PROTOCOL)
+        pickle.dump(conductances, f, pickle.HIGHEST_PROTOCOL)
+        pickle.dump(rates, f, pickle.HIGHEST_PROTOCOL)
+    print("Model successfully saved")
     
 def Model_view():
     print("Entering Model Viewer")
@@ -367,10 +400,15 @@ def Model_view():
         states = pickle.load(f)
         conductances = pickle.load(f)
         rates = pickle.load(f)
+        print("You are now viewing the following modle:")
         print(name)
+        print("\rname has the following states:\r")
         print(states)
+        print("\rThe open states have the following conductances\r")
         print(conductances)
+        print("\rThe rate table is as follows (appologies that it is still in its raw data form.  This will be fixed soon.)\r")
         print(rates)
+        print("\rReturning to Main Menu\r")
 
 def Parameters():
     print ("Entering Simulation parameter Configuration menu")
