@@ -45,6 +45,7 @@ def Models():
     elif selection == "3":
         Model_copy()
     elif selection == "4":
+        print("Entering Model Viewer")
         Model_view()
     elif selection == "5":
         print ("Returning to main menu\r")
@@ -154,9 +155,9 @@ def Model_gen():
                             var = input("Please Enter a number, greater than 0.\r")
                         if work ==1:
                             if var > 0:
-                                key = createKey(x,y,1)
+                                key = createKey(states[x],states[y],1)
                                 rates [key]=1
-                                key = createKey(x,y,2)
+                                key = createKey(states[x],states[y],2)
                                 rates[key]=var
                                 varnotset = 0
                             else:
@@ -180,9 +181,9 @@ def Model_gen():
                             var = input("Please Enter a number\r")
                         if work ==1:
                             if var > 0:
-                                key = createKey(x,y,1)
+                                key = createKey(states[x],states[y],1)
                                 rates [key]=2
-                                key = createKey(x,y,2)
+                                key = createKey(states[x],states[y],2)
                                 rates[key]=var
                                 varnotset = 0
                     
@@ -199,7 +200,7 @@ def Model_gen():
                             var = input("Please Enter a number\r")
                         if work ==1:
                             if var > 0:
-                                key = createKey(x,y,3)
+                                key = createKey(states[x],states[y],3)
                                 rates[key]=var
                                 varnotset = 0
                                 
@@ -216,7 +217,7 @@ def Model_gen():
                             var = input("Please Enter a number\r")
                         if work ==1:
                             if var > 0:
-                                key = createKey(x,y,4)
+                                key = createKey(states[x],states[y],4)
                                 rates[key]=var
                                 varnotset = 0
                     
@@ -238,9 +239,9 @@ def Model_gen():
                             var = input("Please Enter a number\r")
                         if work ==1:
                             if var > 0:
-                                key = createKey(x,y,1)
+                                key = createKey(states[x],states[y],1)
                                 rates [key]=3
-                                key = createKey(x,y,2)
+                                key = createKey(states[x],states[y],2)
                                 rates[key]=var
                                 varnotset = 0
                     
@@ -257,7 +258,7 @@ def Model_gen():
                             var = input("Please Enter a number\r")
                         if work ==1:
                             if var > 0:
-                                key = createKey(x,y,3)
+                                key = createKey(states[x],states[y],3)
                                 rates[key]=var
                                 varnotset = 0
                                 
@@ -274,9 +275,9 @@ def Model_gen():
                             print("You must enter a ligand")
                             var = input("Please Enter a string\r")
                         else:
-                            key = createKey(x,y,1)
+                            key = createKey(states[x],states[y],1)
                             rates [key]=4
-                            key = createKey(x,y,2)
+                            key = createKey(states[x],states[y],2)
                             rates[key]=var
                             varnotset = 0
                     
@@ -293,7 +294,7 @@ def Model_gen():
                             var = input("Please Enter a number\r")
                         if work ==1:
                             if var > 0:
-                                key = createKey(x,y,3)
+                                key = createKey(states[x],states[y],3)
                                 rates[key]=var
                                 varnotset = 0
                                 
@@ -310,17 +311,17 @@ def Model_gen():
                             var = input("Please Enter a number\r")
                         if work ==1:
                             if var > 0:
-                                key = createKey(x,y,4)
+                                key = createKey(states[x],states[y],4)
                                 rates[key]=var
                                 varnotset = 0
                 elif selection == "5":
-                    key = createKey(x,y,1)
+                    key = createKey(states[x],states[y],1)
                     rates[key] = 0
                 else:
                     print("We're sorry.  An error has occured.  Please restart program.  This should not happen.")
                     sys.exit()                
             else:
-                key = createKey(x,y,1)
+                key = createKey(states[x],states[y],1)
                 rates[key]= 0
             y=y+1
         x = x+1
@@ -345,6 +346,44 @@ def createKey(a, b, c):
 
 def Model_mod():
     print("Entering Model Modifier")
+    print("To modify a model, first you must select a model to modify")
+    Model_view()
+    print("How would you to modify the model?")
+    print("1.  Add or remove states")
+    print("2.  Change Connections between states")
+    print("3.  Return to Main Menu")
+    selection = input("Type 1-3 to make selection, and hit 'Enter'.\r")
+    while selection != "1" and selection != "2" and selection != "3" and selection != "4" and selection != "5":
+        print("Invalid selection\r")
+        selection = input("Type 1-3 to make selection, and hit 'Enter'.\r")
+    if selection == "1":
+        #Fix this later.  I probably won't have time to, but Hopefully I will.
+        print("This Section is not yet implemented.  Our appologies.  For fundamental changes to Model, including number of states, please Generate a new Model")
+    elif selection == "2":
+        x = 0
+        y = 0
+        strmax = len(states)
+        print("\rYou are currently modifying a model with the following states:\r")
+        print (states)
+        for x in range (0, strmax):
+            print(x, ", ", state[x], "\r")
+            
+        #Save modified model
+        print("Model is fully defined.  Model will now save to file\r")
+        fileString = name + "_model.p"
+        fileString = str(fileString)
+        with open(fileString, 'wb') as f:
+            pickle.dump(name, f, pickle.HIGHEST_PROTOCOL)
+            pickle.dump(states, f, pickle.HIGHEST_PROTOCOL)
+            pickle.dump(conductances, f, pickle.HIGHEST_PROTOCOL)
+            pickle.dump(rates, f, pickle.HIGHEST_PROTOCOL)
+        print("Module successfully configured.  Returning to main menu\r")
+    elif selection == "3":
+        print ("Returning to main menu\r")
+        menu()
+    else:
+        print("We're sorry.  An error has occured.  Please restart program.  This should not happen.")
+        sys.exit()    
     
 def Model_copy():
     print("Entering Model Copier")
@@ -383,7 +422,6 @@ def Model_copy():
     print("Model successfully saved")
     
 def Model_view():
-    print("Entering Model Viewer")
     #PLEASE MAKE A WAY TO SHOW ALL OF THE MODELS IN THE WORKING FOLDER!!!
     print("Pleae enter the name of the model you wish to open\r")
     var = input("Please Enter a string\r")
@@ -408,13 +446,372 @@ def Model_view():
         print(conductances)
         print("\rThe rate table is as follows (appologies that it is still in its raw data form.  This will be fixed soon.)\r")
         print(rates)
-        print("\rReturning to Main Menu\r")
 
-def Parameters():
+def Parameters():  #Done
     print ("Entering Simulation parameter Configuration menu")
+    print("1.  Generate Experimental Procedure")
+    print("2.  Modify Existing Experimental Procedure")
+    print("3.  Copy Existing Experimental Procedure")
+    print("4.  View Existing Experimental Procedure")
+    print("5.  Return to Main Menu")
+    selection = input("Type 1-5 to make selection, and hit 'Enter'.\r")
+    while selection != "1" and selection != "2" and selection != "3" and selection != "4" and selection != "5":
+        print("Invalid selection\r")
+        selection = input("Type 1-5 to make selection, and hit 'Enter'.\r")
+    if selection == "1":
+        Param_gen()
+    elif selection == "2":
+        Param_mod()
+    elif selection == "3":
+        Param_copy()
+    elif selection == "4":
+        print("Entering Model Viewer")
+        Param_view()
+    elif selection == "5":
+        print ("Returning to main menu\r")
+        menu()
+    else:
+        print("We're sorry.  An error has occured.  Please restart program.  This should not happen.")
+        sys.exit()
+        
+def Param_gen():
+    print("Entered Simulation Param Generation\r")
+    nameset = 0
+    while nameset == 0:
+        pname = input("Please name your Parameter set\r")
+        if name != "" and name != "\r":
+            name = pname
+            nameset == 1
+        else:
+            print("Invalid name.  Please enter a name\r")
+    oParam = []  #Should contain initial state, membraneCapacitance, maxchannelConductance, and reversalPotential.  You still need to input these
+    vParam = {}
+    cParam = []
+    openloop = 1
+    x = 1
+    while openloop == 1:
+        mybool = input("Add a voltage stage? (Y/N)\r").lower()
+        while mybool != "n" and mybool != "y":
+            print("Invalid selection\r")
+            mybool = input("Add a voltage stage?  (Y/N)\r")
+        if mybool == "y":
+            print("Is this stage a hold, or a step (hold/step\r)")
+            loop2 = 1
+            while loop2 == 1:
+                mybool2 = input("Hold or step?\r").lower()
+                if mybool2 != 'hold' and mybool2 != 'step':
+                    print("Invalid input.  Please choose hold or step")
+                else:
+                    loop2 = 0
+            if mybool2 == 'hold':
+                print ("Please input the voltage to hold at.\r")
+                var = input("Please input a number\r")
+                vnotset = 1
+                while vnotset == 1:
+                    try:
+                        var = float(var)
+                        vnotset = 0
+                    except ValueError:
+                        print ("input is not a number.  Please try again\r")
+                        var = input("Please input a number\r")
+                voltage = var
+                dnotset = 1
+                while dnotset == 1:
+                    try:
+                        var = float(var)
+                        dnotset = 0
+                    except ValueError:
+                        print("Input is not a number, please try again\r")
+                        var = input("Please input a number\r")
+                duration = var
+                createKey('consentrations', x, 0)
+                vParam[key] = 1
+                createKey('consentrations', x, 1)
+                vParam[key] = voltage
+                createKey('consentrations', x, 2)
+                vParam[key] = duration
+            elif mybool2 == 'step':
+                print ("Please input the starting voltage\r")
+                var = input("Please input a number\r")
+                startnotset = 1
+                while startnotset == 1:
+                    try:
+                        var = float(var)
+                        startnotset = 0
+                    except ValueError:
+                        print ("input is not a number.  Please try again\r")
+                        var = input("Please input a number\r")
+                start = var
+                stopnotset = 1
+                while stopnotset == 1:
+                    try:
+                        var = float(var)
+                        stopnotset = 0
+                    except ValueError:
+                        print("Input is not a number, please try again\r")
+                        var = input("Please input a number\r")
+                stop = var
+                stepnotset = 1
+                while stepnotset == 1:
+                    try:
+                        var = float(var)
+                        stepnotset = 0
+                    except ValueError:
+                        print("Input is not a number, please try again\r")
+                        var = input("Please input a number\r")
+                step = var
+                durationnotset = 1
+                while durationnotset == 1:
+                    try:
+                        var = float(var)
+                        durationnotset = 0
+                    except ValueError:
+                        print("Input is not a number, please try again\r")
+                        var = input("Please input a number\r")
+                duration = var
+                createKey('consentrations', x, 0)
+                vParam[key] = 2
+                createKey('consentrations', x, 1)
+                vParam[key] = start
+                createKey('consentrations', x, 2)
+                vParam[key] = stop
+                createKey('consentrations', x, 3)
+                vParam[key] = step
+                createKey('consentrations', x, 4)
+                vParam[key] = duration
+            else:  
+                print ("this should not happen.  Our appologies")
+            x = x+1
+        else:
+            print("Voltage proticol completed")
+            print(vParam)
+            openloop = 0
+    openloop = 1
+    print("Please enter your desired ligand\r")
+    var = input("Please Enter a string\r")
+    varnotset = 1
+    x = 1
+    while varnotset == 1:
+        if input =='':
+            print("You must enter a ligand")
+            var = input("Please Enter a string\r")
+        else:
+            cParam[0] = var
+            varnotset = 0  
+    while openloop == 1:
+        print ("Please input first concentration\r")
+        print ("You will input the concentration of ligand as two parts, a magnitude and a multiplier\r")
+        var = input ("Please enter magnitude.  The magnitude will be entered as 10^X\r")
+        varnotset = 1
+        while varnotset == 1:  #I think I'm accepting all numbers, but I should just accept ints.  Maybe fix this later.
+            work = 0
+            try:
+                var = float(var)
+                work = 1
+            except:
+                print("Ligand magnatude must be a number")
+                var = input ("Please enter magnitude.\r")
+            if work == 1:
+                if var <=0:
+                    print("Ligand magnitude must be greater than zero\r")
+                    var = input("Please enter magnitude.\r")
+                else:
+                    varnotset = 0
+        varnotset = 1
+        var2 = input ("Please enter scalar\r")
+        while varnotset == 1:  
+            work = 0
+            try:
+                var2 = float(var2)
+                work = 1
+            except:
+                print("Ligand scalar must be a number")
+                va2r = input ("Please enter scalar.\r")
+            if work == 1:
+                if var2 <=0:
+                    print("Ligand scalar must be greater than zero\r")
+                    var = input("Please enter scalar.\r")
+                else:
+                    varnotset = 0
+        var = var * var2
+        cParam[x] = var
+        x = x+1
+        print("Do you want to input an additional concentration?\r")
+        confirm = input ("Y/N\r").lower()
+        while confirm != "y" and confirm != "n":
+            confirm = input ("Y/N\r")
+        if confirm == 'n':
+            openloop = 0
+    print("Pleae enter the name you would like to save the new parameters as\r")
+    var = input("Please Enter a string\r")
+    varnotset = 1
+    while varnotset == 1:
+        if input =='':
+            print("You must enter a name")
+            var = input("Please Enter a string\r")
+        else:
+            varnotset = 0
+    fileString = var + "_Params.p"    
+    with open(fileString, 'wb') as f:
+        pickle.dump(name, f, pickle.HIGHEST_PROTOCOL)
+        pickle.dump(oParam, f, pickle.HIGHEST_PROTOCOL)
+        pickle.dump(vParam, f, pickle.HIGHEST_PROTOCOL)
+        pickle.dump(cParam, f, pickle.HIGHEST_PROTOCOL)
+    print("Parameters successfully saved")    
+
+def Param_mod():
+    print("Entering Simulation Parameter Modification\r")
+    print("This section is not yet implemented.  Our oppologies")
     
+def Param_copy():  #Completed with the small exception of showing options
+    print("Entering Simulation Parameter Copy mode\r")
+    #PLEASE MAKE A WAY TO SHOW ALL OF THE MODELS IN THE WORKING FOLDER!!!
+    print("Pleae enter the name of the model you wish to open\r")
+    var = input("Please Enter a string\r")
+    varnotset = 1
+    while varnotset == 1:
+        if input =='':
+            print("You must enter a name")
+            var = input("Please Enter a string\r")
+        else:
+            varnotset = 0
+    fileString = var + "_Params.p"
+    with open(fileString, 'rb') as f:
+        name = pickle.load(f)
+        oParam = pickle.load(f)
+        vParam = pickle.load(f)
+        cParam = pickle.load(f)
+        
+    print("Pleae enter the name you would like to save the new parameters as\r")
+    var = input("Please Enter a string\r")
+    varnotset = 1
+    while varnotset == 1:
+        if input =='':
+            print("You must enter a name")
+            var = input("Please Enter a string\r")
+        else:
+            varnotset = 0
+    fileString = var + "_Params.p"    
+    with open(fileString, 'wb') as f:
+        pickle.dump(name, f, pickle.HIGHEST_PROTOCOL)
+        pickle.dump(oParam, f, pickle.HIGHEST_PROTOCOL)
+        pickle.dump(vParam, f, pickle.HIGHEST_PROTOCOL)
+        pickle.dump(cParam, f, pickle.HIGHEST_PROTOCOL)
+    print("Parameters successfully saved")
+    
+def Param_view():  #Completed, but Please make it more user friendly, perhaps by going through the variables one at a time.  
+    print("Entering Simulation Parameter Viewer\r")
+    #PLEASE MAKE A WAY TO SHOW ALL OF THE MODELS IN THE WORKING FOLDER!!!
+    print("Pleae enter the name of the Parameter file you wish to open\r")
+    var = input("Please Enter a string\r")
+    varnotset = 1
+    while varnotset == 1:
+        if input =='':
+            print("You must enter a name")
+            var = input("Please Enter a string\r")
+        else:
+            varnotset = 0
+    fileString = var + "_Params.p"
+    with open(fileString, 'rb') as f:
+        name = pickle.load(f)
+        oParams = pickle.load(f)
+        vParams = pickle.load(f)
+        cParams = pickle.load(f)
+        print("You are now viewing the following Parameter file:")
+        print(name)
+        print("\rname has the following overall Parameters:\r")
+        print(oParams)
+        print("\rThe following Voltage Proticols\r")
+        print(vParams)
+        print("\rThe following Concentration proticols)\r")
+        print(cParams)
+
 def Simulation():
     print ("entering Simulation mode")
-
+    from modFosa import *
+    Model_view()
+    #Define the states
+    for x in states:
+        if x[0] == 'O':
+            state(x, Conducting = True, gating = conductances[x])
+        else:
+            state(x)
+    #Define the Connections and rates
+    for x in states:
+        for y in states:
+            key = createKey(x, y, 1)
+            #if rates[key] == 0:
+                #Yeah this doesn't do anything maybe do something here?
+            if rates[key] == 1: #constant
+                connection = states(x) + states(y)
+                #print(connection)
+                connect(fromState=x, toState=y, rate =connection)
+                key = createKey(x, y, 2)
+                rate(connection, type ='constant', k = rates[key])
+            if rates[key] == 2: #Boltzman
+                connection = statex(x) + states(y)
+                connect(fromState=x, toState = y, rate = connection)
+                key1 = createKey(x, y, 2)
+                key2 = createKey(x, y, 3)
+                key3 = createKey(x, y, 4)
+                rate(connection, type = 'boltzman', a = rates[key1], v_half = rates[key2], k = rates[key3])
+            if rates[key] ==3: #Exponential
+                connection = statex(x) + states(y)
+                connect(fromState=x, toState = y, rate = connection)
+                key1 = createKey(x, y, 2)
+                key2 = createKey(x, y, 3)
+                rate(connection, type = 'exponential', a = rates[key1], k = rates[key2])
+            if rates[key] == 4:  #ligandGated
+                connection = statex(x) + states(y)
+                connect(fromState=x, toState = y, rate = connection)
+                key1 = createKey(x, y, 2)
+                key2 = createKey(x, y, 3)
+                key3 = createKey(x, y, 4)
+                rate(connection, type = 'ligandGated', ligand = rates[key1], ligand_power = rates[key2], k = rates[key3])
+    initialState(oParam[1])
+    membraneCapacitance(oParam[2])
+    maxChannelConductance(oParam[3])
+    reversalPotential(oParam[4])
+    
+    voltageProtocol('vp')
+    x = 1
+    while x < len(vParam):
+        key1 = createKey('concentrations', x, 0)
+        key2 = createKey('concentrations', x, 1)
+        key3 = createKey('concentrations', x, 2)
+        key4 = createKey('concentrations', x, 3)
+        key5 = createKey('concentrations', x, 4)
+        if vParam[key1] == 1:
+            #Hold
+            voltageProtocolAddStage('vp', 'hold', voltage = vParam[key2], duration = duration = vParam[key3])
+        elif vParam[key1] == 2:
+            #Step
+            voltageProtocolAddStage('vp', 'step', start = vParam[key2], stop = vParam[key3], step = vParam[key4], duration = vParam[key5])            
+        else:
+            print("This Should not happen")
+    x = 1
+    concentrationProtocol('concentrations')
+    while x < len(oParam):
+        addConcentration('concentrations', oParam[x])
+    
+    experiment(name, 'vp', 'concentrations')
+    validate()
+    run()
+    
+    #Plotting
+    
+    currents = plotMultipleCurrents(name)
+    gVsV = plotGvsV(name, time_ms =1099) #Maybe figure this part out
+    gVsCa = plotGvsConcentration(name, time_ms = 1099)
+    
+    iv_late = plotMultipleIV(name, time_ms = 1099, ymin = -10, ymax = 50, labelHeight = 40)
+    iv_tail = plotMultipleIV(name, time_ms = 1100, ymin = -30, ymax = 30, labelHeight = 20)
+    
+        
+        
+    
+                
+                
+                
 while 1:
     menu()
