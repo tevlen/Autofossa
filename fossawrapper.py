@@ -91,7 +91,7 @@ def Model_gen():
                     elif conductance <= 0:
                         print("input must be greater than zero.  Please try again\r")
                     else:
-                        conductances[mystring] = conductance
+                        conductances = {mystring:conductance}
                         cnotset = 1
                 if cnotset == 0:
                     conductance = raw_input(output_string)
@@ -541,12 +541,14 @@ def Param_gen():
     cParam = []
     openloop = 1
     x = 1
+    lparam = 0
     while openloop == 1:
         mybool = raw_input("Add a voltage stage? (Y/N)\r").lower()
         while mybool != "n" and mybool != "y":
             print("Invalid selection\r")
             mybool = raw_input("Add a voltage stage?  (Y/N)\r")
         if mybool == "y":
+            lparam = lparam+1
             print("Is this stage a hold, or a step (hold/step\r)")
             loop2 = 1
             while loop2 == 1:
@@ -577,11 +579,11 @@ def Param_gen():
                         print("input is not a number, please try again\r")
                         var = raw_input("Please input a number\r")
                 duration = var
-                key = createKey('consentrations', x, 0)
+                key = createKey('concentrations', x, 0)
                 vParam[key] = 1
-                key = createKey('consentrations', x, 1)
+                key = createKey('concentrations', x, 1)
                 vParam[key] = voltage
-                key = createKey('consentrations', x, 2)
+                key = createKey('concentrations', x, 2)
                 vParam[key] = duration
             elif mybool2 == 'step':
                 print ("Please input the starting voltage\r")
@@ -625,21 +627,22 @@ def Param_gen():
                         print("input is not a number, please try again\r")
                         var = raw_input("Please input a number\r")
                 duration = var
-                key = createKey('consentrations', x, 0)
+                key = createKey('concentrations', x, 0)
                 vParam[key] = 2
-                key = createKey('consentrations', x, 1)
+                key = createKey('concentrations', x, 1)
                 vParam[key] = start
-                key = createKey('consentrations', x, 2)
+                key = createKey('concentrations', x, 2)
                 vParam[key] = stop
-                key = createKey('consentrations', x, 3)
+                key = createKey('concentrations', x, 3)
                 vParam[key] = step
-                key = createKey('consentrations', x, 4)
+                key = createKey('concentrations', x, 4)
                 vParam[key] = duration
             else:  
                 print ("this should not happen.  Our appologies")
             x = x+1
         else:
             print("Voltage proticol completed")
+            vParam[0] = lparam
             print(vParam)
             openloop = 0
     openloop = 1
@@ -800,57 +803,59 @@ def Simulation():
             print conductances
             dvar = conductances[x]
             print dvar
-            state(x, Conducting = True, gating = conductances[x])
+            state(x, conducting = True, gating = conductances[x])
         else:
             state(x)
     #Define the Connections and rates
+    print rates
     for x in states:
         for y in states:
-            key = createKey(x, y, 1)
-            #if rates[key] == 0:
-                #Yeah this doesn't do anything maybe do something here?
-            if rates[key] == 1: #constant
-                connection = states(x) + states(y)
-                #print(connection)
-                connect(fromState=x, toState=y, rate =connection)
-                key = createKey(x, y, 2)
-                rate(connection, type ='constant', k = rates[key])
-            if rates[key] == 2: #Boltzman
-                connection = statex(x) + states(y)
-                connect(fromState=x, toState = y, rate = connection)
-                key1 = createKey(x, y, 2)
-                key2 = createKey(x, y, 3)
-                key3 = createKey(x, y, 4)
-                rate(connection, type = 'sigmoidal', a = rates[key1], v_half = rates[key2], k = rates[key3])#This might have to be boltzman instead.  Documentation is unclear
-            if rates[key] ==3: #Exponential
-                connection = statex(x) + states(y)
-                connect(fromState=x, toState = y, rate = connection)
-                key1 = createKey(x, y, 2)
-                key2 = createKey(x, y, 3)
-                rate(connection, type = 'exponential', a = rates[key1], k = rates[key2])
-            if rates[key] == 4:  #ligandGated
-                connection = statex(x) + states(y)
-                connect(fromState=x, toState = y, rate = connection)
-                key1 = createKey(x, y, 2)
-                key2 = createKey(x, y, 3)
-                key3 = createKey(x, y, 4)
-                rate(connection, type = 'ligandGated', ligand = rates[key1], ligand_power = rates[key2], k = rates[key3])
-
-                print("Pleae enter the name of the Parameter file you wish to open\r")
-                var = raw_input("Please Enter a string\r")
-                varnotset = 1
-                while varnotset == 1:
-                    if raw_input =='':
-                        print("You must enter a name")
-                        var = raw_input("Please Enter a string\r")
-                    else:
-                        varnotset = 0
-                fileString = var + "_Params.p"
-                with open(fileString, 'rb') as f:
-                    name2 = pickle.load(f)
-                    oParams = pickle.load(f)
-                    vParams = pickle.load(f)
-                    cParam = pickle.load(f)                
+            if x!=y:
+                key = createKey(x, y, 1)
+                #if rates[key] == 0:
+                    #Yeah this doesn't do anything maybe do something here?
+                if rates[key] == 1: #constant
+                    connection = x + y
+                    #print(connection)
+                    connect(fromState=x, toState=y, rate =connection)
+                    key = createKey(x, y, 2)
+                    rate(connection, type ='constant', k = rates[key])
+                if rates[key] == 2: #Boltzman
+                    connection = x + y
+                    connect(fromState=x, toState = y, rate = connection)
+                    key1 = createKey(x, y, 2)
+                    key2 = createKey(x, y, 3)
+                    key3 = createKey(x, y, 4)
+                    rate(connection, type = 'sigmoidal', a = rates[key1], v_half = rates[key2], k = rates[key3])#This might have to be boltzman instead.  Documentation is unclear
+                if rates[key] ==3: #Exponential
+                    connection = x + y
+                    connect(fromState=x, toState = y, rate = connection)
+                    key1 = createKey(x, y, 2)
+                    key2 = createKey(x, y, 3)
+                    rate(connection, type = 'exponential', a = rates[key1], k = rates[key2])
+                if rates[key] == 4:  #ligandGated
+                    connection = x + y
+                    connect(fromState=x, toState = y, rate = connection)
+                    key1 = createKey(x, y, 2)
+                    key2 = createKey(x, y, 3)
+                    key3 = createKey(x, y, 4)
+                    rate(connection, type = 'ligandGated', ligand = rates[key1], power = rates[key2], k = rates[key3])
+    
+    print("Pleae enter the name of the Parameter file you wish to open\r")
+    var = raw_input("Please Enter a string\r")
+    varnotset = 1
+    while varnotset == 1:
+        if raw_input =='':
+            print("You must enter a name")
+            var = raw_input("Please Enter a string\r")
+        else:
+            varnotset = 0
+    fileString = var + "_Params.p"
+    with open(fileString, 'rb') as f:
+        name2 = pickle.load(f)
+        oParam = pickle.load(f)
+        vParam = pickle.load(f)
+        cParam = pickle.load(f)                
 
     initialState(oParam[1])
     membraneCapacitance(oParam[2])
@@ -859,7 +864,10 @@ def Simulation():
     
     voltageProtocol('vp')
     x = 1
-    while x < len(vParam):
+    print vParam
+    z=0
+    lparam = vParam[0]
+    while x < lparam:
         key1 = createKey('concentrations', x, 0)
         key2 = createKey('concentrations', x, 1)
         key3 = createKey('concentrations', x, 2)
@@ -867,16 +875,26 @@ def Simulation():
         key5 = createKey('concentrations', x, 4)
         if vParam[key1] == 1:
             #Hold
-            voltageProtocolAddStage('vp', 'hold', voltage = vParam[key2], duration = vParam[key3])
+            vpname = 'hold' + str(z)
+            arg1 = int(vParam[key2])
+            arg2 = int(vParam[key3])
+            voltageProtocolAddStage('vp', vpname, voltage = arg1, duration = arg2)
         elif vParam[key1] == 2:
             #Step
-            voltageProtocolAddStage('vp', 'step', start = vParam[key2], stop = vParam[key3], step = vParam[key4], duration = vParam[key5])            
+            vpname = 'step' + str(z)
+            arg1 = int(vParam[key2])
+            arg2 = int(vParam[key3])
+            arg3 = int(vParam[key4])
+            arg4 = int(vParam[key5])
+            voltageProtocolAddStage('vp', vpname, start = arg1, stop = arg2, step = arg3, duration = arg4)            
         else:
             print("This Should not happen")
+        x=x+1
     x = 1
     concentrationProtocol('concentrations')
-    while x < len(oParam):
-        addConcentration('concentrations', oParam[x])
+    while x < len(cParam):
+        addConcentration(cParam[x])
+        x=x+1
     
     experiment(name, 'vp', 'concentrations')
     validate()
@@ -892,5 +910,10 @@ def Simulation():
     iv_tail = plotMultipleIV(name, time_ms = 1100, ymin = -30, ymax = 30, labelHeight = 20)
     
         
+        
+    
+                
+                
+                
 while 1:
     menu()
