@@ -91,7 +91,7 @@ def Model_gen():
                     elif conductance <= 0:
                         print("input must be greater than zero.  Please try again\r")
                     else:
-                        conductances = {mystring:conductance}
+                        conductances[mystring] = conductance
                         cnotset = 1
                 if cnotset == 0:
                     conductance = raw_input(output_string)
