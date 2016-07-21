@@ -91,13 +91,15 @@ def Model_gen():
                     elif conductance <= 0:
                         print("input must be greater than zero.  Please try again\r")
                     else:
-                        conductances = {mystring:conductance}
+                        conductances[mystring] = conductance
                         cnotset = 1
                 if cnotset == 0:
                     conductance = raw_input(output_string)
         else:
             openloop = 0
     closedloop = 1
+    print("conductances are ")
+    print(conductances)
     while closedloop == 1:
         mybool = raw_input("Generate closed state? (Y/N)\r").lower()
         while mybool != "n" and mybool != "y":
@@ -122,6 +124,8 @@ def Model_gen():
     strmax = len(states)
     print("\rYou have generated a model with the following states:\r")
     print (states)
+    print("\rYour states have the following conductances:\r")
+    print (conductances)
     print("We will now configure the connections between all possible states\r")
     #print (strmax)
     for x in range (0, strmax):
@@ -798,7 +802,9 @@ def Simulation():
         rates = pickle.load(f)
 
     #Define the states
+    print("defining states")
     for x in states:
+	print(x)
         if x[0] == 'O':
             print conductances
             dvar = conductances[x]
@@ -868,6 +874,10 @@ def Simulation():
     z=0
     lparam = vParam[0]
     while x < lparam:
+        print("x is ")
+        print(x)
+        print("lparam is")
+        print(lparam)
         key1 = createKey('concentrations', x, 0)
         key2 = createKey('concentrations', x, 1)
         key3 = createKey('concentrations', x, 2)
