@@ -921,7 +921,7 @@ def Simulation():
     gVsCa = plotGvsConcentration(name, time_ms = 1099)
     
     iv_late = plotMultipleIV(name, time_ms = 1099, ymin = -10, ymax = 50, labelHeight = 40)
-    iv_tail = plotMultipleIV(name, time_ms = 1100, ymin = -30, ymax = 30, labelHeight = 20)
+    iv_tail = plotMultipleIV(name, time_ms = 1099, ymin = -30, ymax = 30, labelHeight = 20)
     
         
         
